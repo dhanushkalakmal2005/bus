@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Route Overview — ShuttleTrack Driver</title>
+  <meta name="description" content="Driver view of shuttle routes, schedules and stops. Read-only access." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">🚌</div>
+        <div class="logo-text">
+          <strong>ShuttleTrack</strong>
+          <span>Driver Portal</span>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Routes (View Only)</div>
+        <div class="nav-item active" id="nav-dr-routes" onclick="showSection('routes')"><span class="nav-icon">🗺️</span> Routes</div>
+        <div class="nav-item" id="nav-dr-schedules" onclick="showSection('schedules')"><span class="nav-icon">🕐</span> Schedules</div>
+        <div class="nav-item" id="nav-dr-stops" onclick="showSection('stops')"><span class="nav-icon">📍</span> Stops</div>
+
+        <div class="nav-section-label">Session</div>
+        <a class="nav-item" href="logout.php"><span class="nav-icon">🚪</span> Logout</a>
+      </nav>
+      <div class="sidebar-user">
+        <div class="user-avatar" id="driver-sidebar-avatar" style="background:linear-gradient(135deg,#34d399,#059669)">JD</div>
+        <div class="user-info">
+          <strong id="driver-name-display">Juan Dela Cruz</strong>
+          <span id="driver-shuttle-display">Driver · Assigned Vehicle</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <h1>Route Overview</h1>
+          <p>Read-only access — contact admin to request changes</p>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-btn" title="Refresh" onclick="location.reload()">🔄</button>
+          <a href="logout.php" class="icon-btn" title="Logout" style="text-decoration:none;display:flex;align-items:center;justify-content:center">🚪</a>
+          <div class="user-avatar" id="driver-topbar-avatar" style="background:linear-gradient(135deg,#34d399,#059669);cursor:pointer">JD</div>
+        </div>
+      </header>
+
+      <div class="page-content">
+        <!-- Read-only banner -->
+        <div class="readonly-banner">
+          ⚠️ <strong>View Only Mode</strong> — You have authorized read-only driver access to shuttle schedules and route stops.
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon blue">🗺️</div>
+            <div><div class="stat-value" id="st-total-routes">0</div><div class="stat-label">Total Routes</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon purple">🕐</div>
+            <div><div class="stat-value" id="st-total-schedules">0</div><div class="stat-label">Active Schedules</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon green">📍</div>
+            <div><div class="stat-value" id="st-total-stops">0</div><div class="stat-label">Bus Stops</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon amber">🚐</div>
+            <div><div class="stat-value" id="st-my-route" style="font-size:16px;line-height:1.4">Loading...</div><div class="stat-label">My Assigned Route</div></div>
+          </div>
+        </div>
+
+        <!-- My Schedule Card -->
+        <div class="section-card" style="margin-bottom:24px">
+          <div class="section-header">
+            <div class="section-title"><span>⭐</span> My Shuttle Assignment</div>
+            <span class="badge badge-green" id="my-badge-status">Active</span>
+          </div>
+          <div style="padding:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px">
+            <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px">
+              <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.5px">Route</div>
+              <div style="font-weight:700;color:var(--text-primary)" id="my-assigned-route">Campus Express</div>
+            </div>
+            <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px">
+              <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.5px">Shuttle</div>
+              <div style="font-weight:700;color:var(--text-primary)" id="my-assigned-shuttle">SH-001 · ABC-1234</div>
+            </div>
+            <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px">
+              <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.5px">Capacity</div>
+              <div style="font-weight:700;color:var(--accent)" id="my-assigned-capacity">24 Seats</div>
+            </div>
+            <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px">
+              <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.5px">Vehicle Status</div>
+              <div style="font-weight:700;color:var(--accent-3)" id="my-vehicle-status">Active</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Routes Section -->
+        <div class="section-card" id="section-routes">
+          <div class="section-header">
+            <div class="section-title"><span>🗺️</span> All Routes</div>
+            <span class="badge badge-amber">View Only</span>
+          </div>
+          <div class="filter-bar">
+            <div class="search-input-wrap">
+              <span class="search-icon">🔍</span>
+              <input type="text" class="search-input" placeholder="Search routes…" oninput="filterRows('dr-routes-tbody', this.value)" />
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Route ID</th><th>Route Name</th><th>From</th><th>To</th>
+                  <th>Distance</th><th>Stops</th><th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="dr-routes-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Schedules Section -->
+        <div class="section-card" id="section-schedules" style="display:none">
+          <div class="section-header">
+            <div class="section-title"><span>🕐</span> All Schedules</div>
+            <span class="badge badge-amber">View Only</span>
+          </div>
+          <div class="filter-bar">
+            <div class="search-input-wrap">
+              <span class="search-icon">🔍</span>
+              <input type="text" class="search-input" placeholder="Search schedules…" oninput="filterRows('dr-schedules-tbody', this.value)" />
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Schedule ID</th><th>Route</th><th>Departure</th><th>Arrival</th>
+                  <th>Days</th><th>Shuttle</th><th>Seats</th><th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="dr-schedules-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Stops Section -->
+        <div class="section-card" id="section-stops" style="display:none">
+          <div class="section-header">
+            <div class="section-title"><span>📍</span> All Stops</div>
+            <span class="badge badge-amber">View Only</span>
+          </div>
+          <div class="filter-bar">
+            <div class="search-input-wrap">
+              <span class="search-icon">🔍</span>
+              <input type="text" class="search-input" placeholder="Search stops…" oninput="filterRows('dr-stops-tbody', this.value)" />
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Stop ID</th><th>Stop Name</th><th>Address</th>
+                  <th>Route</th><th>Order</th><th>Landmark</th>
+                </tr>
+              </thead>
+              <tbody id="dr-stops-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <script src="driver-routes.js"></script>
+</body>
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book a Shuttle — ShuttleTrack Passenger</title>
+  <meta name="description" content="Search available shuttle routes, check seat availability, and book your ride." />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="booking.css" />
+</head>
+<body>
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">🚌</div>
+        <div class="logo-text">
+          <strong>ShuttleTrack</strong>
+          <span>Passenger Portal</span>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Booking &amp; Travel</div>
+        <div class="nav-item active" id="nav-search" onclick="navigateToView('search')">
+          <span class="nav-icon">🔍</span> Search Routes
+        </div>
+        <a class="nav-item" id="nav-tracking" href="tracking.html">
+          <span class="nav-icon">📍</span> Live Tracking
+        </a>
+        <div class="nav-item" id="nav-mybookings" onclick="navigateToView('mybookings')">
+          <span class="nav-icon">🎫</span> My Bookings
+        </div>
+
+        <div class="nav-section-label">Session</div>
+        <a class="nav-item" href="logout.php">
+          <span class="nav-icon">🚪</span> Logout
+        </a>
+      </nav>
+      <div class="sidebar-user">
+        <div class="user-avatar" id="sidebar-avatar" style="background:linear-gradient(135deg,#a78bfa,#7c3aed)">AS</div>
+        <div class="user-info">
+          <strong id="sidebar-username">Alice Santos</strong>
+          <span>Passenger</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <h1 id="view-title">Book a Shuttle</h1>
+          <p id="view-subtitle">Search available routes and reserve your seat</p>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-btn" title="Refresh" onclick="location.reload()">🔄</button>
+          <a href="logout.php" class="icon-btn" title="Logout" style="text-decoration:none;display:flex;align-items:center;justify-content:center">🚪</a>
+          <div class="user-avatar" id="topbar-avatar" style="background:linear-gradient(135deg,#a78bfa,#7c3aed);cursor:pointer" title="Passenger Profile">AS</div>
+        </div>
+      </header>
+
+      <div class="page-content">
+
+        <!-- ══════════════════════════════════════════════
+             VIEW: SEARCH & BOOK
+        ══════════════════════════════════════════════ -->
+        <div id="view-search">
+
+          <!-- Search Hero Card -->
+          <div class="search-hero">
+            <div class="search-hero-title">
+              <span>🚌</span>
+              <div>
+                <h2>Find Your Shuttle</h2>
+                <p>Search routes and book your seat instantly</p>
+              </div>
+            </div>
+            <div class="search-form" id="search-form">
+              <div class="search-fields">
+                <div class="sf-group">
+                  <label class="form-label">📍 From</label>
+                  <select class="form-control" id="sf-from">
+                    <option value="">— Select origin —</option>
+                  </select>
+                </div>
+                <div class="sf-swap" onclick="swapFromTo()" title="Swap">⇄</div>
+                <div class="sf-group">
+                  <label class="form-label">🏁 To</label>
+                  <select class="form-control" id="sf-to">
+                    <option value="">— Select destination —</option>
+                  </select>
+                </div>
+                <div class="sf-group">
+                  <label class="form-label">📅 Date</label>
+                  <input type="date" class="form-control" id="sf-date" />
+                </div>
+                <div class="sf-group">
+                  <label class="form-label">💺 Passengers</label>
+                  <select class="form-control" id="sf-seats">
+                    <option value="1">1 Passenger</option>
+                    <option value="2">2 Passengers</option>
+                    <option value="3">3 Passengers</option>
+                    <option value="4">4 Passengers</option>
+                  </select>
+                </div>
+              </div>
+              <div class="search-actions">
+                <button class="btn btn-secondary" onclick="clearSearch()">Clear</button>
+                <button class="btn btn-primary" onclick="searchRoutes()">🔍 Search Shuttles</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Search Results (hidden until search) -->
+          <div id="search-results" style="display:none;margin-bottom:30px">
+            <div class="results-header">
+              <div>
+                <h3 id="results-heading">Available Trips</h3>
+                <p id="results-sub" style="font-size:13px;color:var(--text-muted)">Showing routes matching your search</p>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="clearSearch()">← Show All Routes</button>
+            </div>
+            <div class="trip-cards-list" id="results-list"></div>
+          </div>
+
+          <!-- Popular Routes -->
+          <div id="popular-routes">
+            <h3 style="font-size:16px;font-weight:700;margin-bottom:14px">⭐ Popular Routes</h3>
+            <div class="route-cards-grid" id="popular-grid"></div>
+          </div>
+
+        </div><!-- /view-search -->
+
+
+        <!-- ══════════════════════════════════════════════
+             VIEW: MY BOOKINGS
+        ══════════════════════════════════════════════ -->
+        <div id="view-mybookings" style="display:none">
+          <div id="mybookings"></div>
+
+          <!-- Stats -->
+          <div class="stats-grid" style="margin-bottom:24px">
+            <div class="stat-card">
+              <div class="stat-icon blue">🎫</div>
+              <div><div class="stat-value" id="mb-total">0</div><div class="stat-label">Total Bookings</div></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon green">✅</div>
+              <div><div class="stat-value" id="mb-confirmed">0</div><div class="stat-label">Confirmed</div></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon amber">⏳</div>
+              <div><div class="stat-value" id="mb-pending">0</div><div class="stat-label">Pending</div></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon red">❌</div>
+              <div><div class="stat-value" id="mb-cancelled">0</div><div class="stat-label">Cancelled</div></div>
+            </div>
+          </div>
+
+          <!-- This Week Bookings -->
+          <div class="section-card">
+            <div class="section-header">
+              <div class="section-title"><span>📅</span> My Shuttle Bookings</div>
+              <div class="section-actions">
+                <select class="form-control btn-sm" id="mb-filter" onchange="filterMyBookings(this.value)" style="width:150px">
+                  <option value="">All Status</option>
+                  <option value="Confirmed">Confirmed</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Cancelled">Cancelled</option>
+                  <option value="Completed">Completed</option>
+                </select>
+                <button class="btn btn-primary btn-sm" onclick="navigateToView('search')">
+                  ➕ New Booking
+                </button>
+              </div>
+            </div>
+            <div class="filter-bar">
+              <div class="search-input-wrap">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" placeholder="Search bookings…" oninput="searchMyBookings(this.value)" />
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Booking ID</th><th>Route</th><th>Date</th>
+                    <th>Time</th><th>Seat</th><th>Fare</th>
+                    <th>Status</th><th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="my-bookings-tbody"></tbody>
+              </table>
+            </div>
+            <div class="pagination" id="mb-pagination"></div>
+          </div>
+        </div><!-- /view-mybookings -->
+
+      </div><!-- /page-content -->
+    </main>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SEAT SELECTION MODAL
+  ══════════════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="modal-seats">
+    <div class="modal" style="max-width:620px">
+      <div class="modal-header">
+        <div class="modal-title">💺 Select Your Seat</div>
+        <button class="modal-close" onclick="closeModal('modal-seats')">✕</button>
+      </div>
+
+      <div class="seat-trip-info" id="seat-trip-info"></div>
+
+      <div class="seat-legend">
+        <span class="seat-legend-item"><span class="seat-dot available"></span> Available</span>
+        <span class="seat-legend-item"><span class="seat-dot occupied"></span> Occupied</span>
+        <span class="seat-legend-item"><span class="seat-dot selected"></span> Selected</span>
+      </div>
+
+      <div class="bus-diagram">
+        <div class="bus-front">🚌 Front of Bus</div>
+        <div class="seat-grid" id="seat-grid"></div>
+        <div class="bus-back">Rear 🚪</div>
+      </div>
+
+      <div class="seat-summary" id="seat-summary">
+        <span>No seat selected</span>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-seats')">Cancel</button>
+        <button class="btn btn-primary" id="proceed-booking-btn" disabled onclick="openBookingConfirm()">
+          Continue to Confirm →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       BOOKING CONFIRM MODAL
+  ══════════════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="modal-confirm-booking">
+    <div class="modal" style="max-width:480px">
+      <div class="modal-header">
+        <div class="modal-title">🎫 Confirm Booking</div>
+        <button class="modal-close" onclick="closeModal('modal-confirm-booking')">✕</button>
+      </div>
+
+      <div class="confirm-booking-card" id="confirm-booking-card"></div>
+
+      <div class="form-group" style="margin-top:16px">
+        <label class="form-label">Special Requests (optional)</label>
+        <textarea class="form-control" id="special-requests" rows="2" placeholder="e.g. wheelchair accessible, assistance needed…"></textarea>
+      </div>
+
+      <div class="terms-notice">
+        <input type="checkbox" id="terms-check" style="accent-color:var(--accent);margin-right:8px" />
+        <label for="terms-check" style="font-size:13px;color:var(--text-secondary);cursor:pointer">
+          I agree to the booking terms and cancellation policy.
+        </label>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-confirm-booking')">← Back</button>
+        <button class="btn btn-primary" onclick="confirmBooking()">✅ Confirm Booking</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       BOOKING SUCCESS MODAL
+  ══════════════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="modal-success">
+    <div class="modal" style="max-width:400px;text-align:center">
+      <div class="success-animation">✅</div>
+      <h2 style="margin-bottom:8px;font-size:22px">Booking Confirmed!</h2>
+      <p style="color:var(--text-secondary);font-size:14px;margin-bottom:20px">
+        Your shuttle seat has been reserved successfully.
+      </p>
+      <div class="booking-ref-card" id="booking-ref-card"></div>
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:20px">
+        <button class="btn btn-secondary" onclick="closeModal('modal-success')">Close</button>
+        <button class="btn btn-primary" onclick="closeModal('modal-success');navigateToView('mybookings')">
+          📋 View My Bookings
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       CANCEL CONFIRM MODAL
+  ══════════════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="modal-cancel-confirm">
+    <div class="modal confirm-modal">
+      <div class="confirm-icon">⚠️</div>
+      <div class="modal-header" style="justify-content:center;margin-bottom:8px">
+        <div class="modal-title">Cancel Booking?</div>
+      </div>
+      <p id="cancel-confirm-msg" style="text-align:center;color:var(--text-secondary);font-size:14px">
+        Are you sure you want to cancel this booking?
+      </p>
+      <div style="background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.2);border-radius:var(--radius-sm);padding:10px 14px;margin-top:14px;font-size:13px;color:var(--text-secondary)">
+        ℹ️ Cancellations made more than 2 hours before departure are eligible for a full refund.
+      </div>
+      <div class="modal-footer" style="justify-content:center">
+        <button class="btn btn-secondary" onclick="closeModal('modal-cancel-confirm')">Keep Booking</button>
+        <button class="btn btn-danger" id="do-cancel-btn">❌ Yes, Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       VIEW BOOKING DETAIL MODAL
+  ══════════════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="modal-booking-detail">
+    <div class="modal" style="max-width:480px">
+      <div class="modal-header">
+        <div class="modal-title">🎫 Booking Details</div>
+        <button class="modal-close" onclick="closeModal('modal-booking-detail')">✕</button>
+      </div>
+      <div id="booking-detail-content"></div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-booking-detail')">Close</button>
+        <button class="btn btn-danger" id="detail-cancel-btn">Cancel Booking</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <script src="booking.js"></script>
+</body>
+</html>

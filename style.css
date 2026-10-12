@@ -1,0 +1,140 @@
+:root {
+    --gunmetal: #2E3532;
+    --dust-grey: #D2D4C8;
+    --soft-linen: #E0E2DB;
+    --dark-amaranth: #8B2635;
+    --tea-green: #D3EFBD;
+    --white: #FFFFFF;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--soft-linen);
+    color: var(--gunmetal);
+}
+
+/* LOGIN / SIGNUP */
+.container {
+    width: 420px;
+    max-width: 95%;
+    margin: 60px auto;
+    padding: 30px;
+    background: var(--dust-grey);
+    border-radius: 15px;
+    box-shadow: 0 8px 24px rgba(46,53,50,0.25);
+}
+
+.logo {
+    text-align: center;
+    font-size: 45px;
+}
+
+.container h2 {
+    text-align: center;
+    color: var(--dark-amaranth);
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-top: 12px;
+    margin-bottom: 5px;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--gunmetal);
+    border-radius: 7px;
+    background: var(--soft-linen);
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: var(--dark-amaranth);
+    box-shadow: 0 0 0 2px rgba(139, 38, 53, 0.2);
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 7px;
+    background: var(--dark-amaranth);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button:hover {
+    background: var(--gunmetal);
+}
+
+a {
+    color: var(--dark-amaranth);
+    font-weight: bold;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.container p,
+.signup-link {
+    text-align: center;
+    margin-top: 18px;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid rgba(46,53,50,0.2);
+    margin: 20px 0;
+}
+
+/* MESSAGES */
+.error,
+.message.error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.success,
+.message.success {
+    background: var(--tea-green);
+    color: var(--gunmetal);
+    border: 1px solid #c2e5a6;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    text-align: center;
+    font-weight: 600;
+}
+
+/* Role badge / note */
+.role-hint {
+    font-size: 12px;
+    color: #555;
+    margin-top: -4px;
+    margin-bottom: 10px;
+}

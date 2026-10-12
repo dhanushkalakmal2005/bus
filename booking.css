@@ -1,0 +1,379 @@
+/* ============================================================
+   booking.css — Passenger Booking Module Styles
+   ============================================================ */
+
+/* ── Search Hero ──────────────────────────────────────────── */
+.search-hero {
+  background: linear-gradient(135deg, rgba(79,142,247,0.12) 0%, rgba(167,139,250,0.08) 100%);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-xl);
+  padding: 28px 32px;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.search-hero::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(79,142,247,0.15), transparent 70%);
+  pointer-events: none;
+}
+
+.search-hero-title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.search-hero-title span { font-size: 36px; }
+.search-hero-title h2 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+.search-hero-title p { font-size: 14px; color: var(--text-secondary); }
+
+/* ── Search Form Fields ───────────────────────────────────── */
+.search-fields {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.sf-group { flex: 1; min-width: 140px; }
+
+.sf-swap {
+  width: 38px; height: 38px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-accent);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: var(--accent);
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-bottom: 0;
+  transition: all var(--transition);
+  align-self: flex-end;
+  margin-bottom: 0;
+}
+.sf-swap:hover { background: var(--accent); color: #fff; transform: rotate(180deg); }
+
+.search-btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  justify-content: center;
+  border-radius: var(--radius-md);
+}
+
+/* ── Result Trip Cards ────────────────────────────────────── */
+.trip-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  transition: all var(--transition);
+  cursor: pointer;
+}
+
+.trip-card:hover {
+  border-color: var(--border-accent);
+  box-shadow: var(--shadow-accent);
+  transform: translateY(-1px);
+}
+
+.trip-card.no-seats { opacity: 0.6; cursor: not-allowed; }
+
+.trip-time-block { text-align: center; min-width: 70px; }
+.trip-time { font-size: 20px; font-weight: 800; color: var(--text-primary); line-height: 1; }
+.trip-label { font-size: 11px; color: var(--text-muted); font-weight: 600; margin-top: 3px; }
+
+.trip-line {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.trip-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  flex-shrink: 0;
+}
+
+.trip-track {
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  position: relative;
+}
+
+.trip-track::after {
+  content: '▶';
+  position: absolute;
+  right: -6px; top: -8px;
+  font-size: 12px; color: var(--accent-2);
+}
+
+.trip-duration {
+  position: absolute;
+  top: -18px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px; color: var(--text-muted); white-space: nowrap;
+  font-weight: 600;
+}
+
+.trip-info { min-width: 120px; }
+.trip-route-name { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+.trip-shuttle { font-size: 12px; color: var(--text-secondary); margin-top: 3px; }
+
+.trip-seats-block { text-align: center; min-width: 80px; }
+.seats-available { font-size: 18px; font-weight: 800; }
+.seats-available.high  { color: var(--accent-3); }
+.seats-available.mid   { color: var(--warning); }
+.seats-available.low   { color: var(--danger); }
+.seats-label { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+
+.trip-fare-block { text-align: right; min-width: 80px; }
+.trip-fare { font-size: 20px; font-weight: 800; color: var(--accent); }
+.trip-fare-label { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+
+.trip-book-btn {
+  flex-shrink: 0;
+}
+
+/* ── Popular Route Cards ──────────────────────────────────── */
+.route-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.popular-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  cursor: pointer;
+  transition: all var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.popular-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.popular-card.color-blue::before  { background: linear-gradient(90deg, var(--accent), var(--accent-light)); }
+.popular-card.color-purple::before{ background: linear-gradient(90deg, var(--accent-2), #c4b5fd); }
+.popular-card.color-green::before { background: linear-gradient(90deg, var(--accent-3), #6ee7b7); }
+.popular-card.color-amber::before { background: linear-gradient(90deg, var(--warning), #fcd34d); }
+
+.popular-card:hover { border-color: var(--border-accent); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+.pc-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.pc-route-name { font-size: 15px; font-weight: 700; }
+.pc-fare { font-size: 18px; font-weight: 800; color: var(--accent); }
+.pc-from-to { font-size: 12px; color: var(--text-secondary); margin-bottom: 10px; }
+.pc-from-to span { color: var(--accent); }
+.pc-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* ── Seat Grid ────────────────────────────────────────────── */
+.bus-diagram {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin: 16px 0;
+}
+
+.bus-front, .bus-back {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  padding: 6px;
+}
+
+.bus-front { border-bottom: 2px dashed var(--border); margin-bottom: 16px; }
+.bus-back  { border-top: 2px dashed var(--border); margin-top: 16px; }
+
+.seat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  max-width: 260px;
+  margin: 0 auto;
+}
+
+.seat {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.15s ease;
+  position: relative;
+  user-select: none;
+}
+
+.seat.available {
+  background: rgba(52,211,153,0.15);
+  border-color: rgba(52,211,153,0.4);
+  color: var(--accent-3);
+}
+.seat.available:hover {
+  background: rgba(52,211,153,0.3);
+  transform: scale(1.08);
+}
+
+.seat.occupied {
+  background: rgba(148,163,184,0.08);
+  border-color: rgba(148,163,184,0.2);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+.seat.selected {
+  background: linear-gradient(135deg, var(--accent), #3b7de8);
+  border-color: var(--accent);
+  color: #fff;
+  box-shadow: 0 0 12px rgba(79,142,247,0.5);
+  transform: scale(1.08);
+}
+
+/* Aisle gap — column 3 has larger left margin */
+.seat-grid .seat:nth-child(4n+3) { margin-left: 12px; }
+
+.seat-legend {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 12px;
+  justify-content: center;
+}
+.seat-legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); }
+.seat-dot {
+  width: 14px; height: 14px;
+  border-radius: 4px;
+  border: 2px solid transparent;
+}
+.seat-dot.available { background: rgba(52,211,153,0.2); border-color: rgba(52,211,153,0.5); }
+.seat-dot.occupied  { background: rgba(148,163,184,0.12); border-color: rgba(148,163,184,0.3); }
+.seat-dot.selected  { background: var(--accent); border-color: var(--accent); }
+
+.seat-summary {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+/* Seat trip info inside seat modal */
+.seat-trip-info {
+  background: rgba(79,142,247,0.08);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.sti-item label { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 3px; }
+.sti-item span  { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+
+/* ── Confirm Booking Card ─────────────────────────────────── */
+.confirm-booking-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.cb-header {
+  background: linear-gradient(135deg, var(--accent), #3b7de8);
+  padding: 14px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cb-header-left { color: #fff; }
+.cb-route-name { font-weight: 700; font-size: 15px; }
+.cb-route-sub  { font-size: 12px; opacity: 0.8; margin-top: 2px; }
+.cb-fare { font-size: 22px; font-weight: 800; color: #fff; }
+
+.cb-body { padding: 16px 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.cb-field label { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 3px; }
+.cb-field span  { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+
+.terms-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: rgba(79,142,247,0.06);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+/* ── Success Animation ────────────────────────────────────── */
+.success-animation {
+  font-size: 64px;
+  text-align: center;
+  margin-bottom: 16px;
+  animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+@keyframes popIn {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+.booking-ref-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  text-align: center;
+}
+.booking-ref-label { font-size: 11px; color: var(--text-muted); font-weight: 600; margin-bottom: 6px; }
+.booking-ref-id { font-size: 22px; font-weight: 800; color: var(--accent); letter-spacing: 2px; }
+
+/* ── My Bookings Table Extras ─────────────────────────────── */
+.no-bookings {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+}
+.no-bookings .empty-icon { font-size: 52px; margin-bottom: 14px; }
+.no-bookings h3 { font-size: 17px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; }
+.no-bookings p { font-size: 13px; margin-bottom: 16px; }
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .trip-card { flex-wrap: wrap; }
+  .search-fields { flex-direction: column; }
+  .sf-swap { display: none; }
+  .seat-trip-info { grid-template-columns: 1fr 1fr; }
+  .cb-body { grid-template-columns: 1fr; }
+}
