@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Route &amp; Service Management — ShuttleTrack Admin</title>
+  <meta name="description" content="Admin panel for managing shuttle routes, schedules, stops, shuttles, bookings, and user accounts." />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="admin-routes.css" />
+</head>
+<body>
+  <!-- Background Orbs -->
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+
+  <div class="app-layout">
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">🚌</div>
+        <div class="logo-text">
+          <strong>ShuttleTrack</strong>
+          <span>Admin Panel</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Route Management</div>
+        <div class="nav-item active" id="nav-routes" onclick="showTab('routes'); setActive(this)">
+          <span class="nav-icon">🗺️</span> Routes
+        </div>
+        <div class="nav-item" id="nav-schedules" onclick="showTab('schedules'); setActive(this)">
+          <span class="nav-icon">🕐</span> Schedules
+        </div>
+        <div class="nav-item" id="nav-stops" onclick="showTab('stops'); setActive(this)">
+          <span class="nav-icon">📍</span> Stops
+        </div>
+        <div class="nav-item" id="nav-shuttles" onclick="showTab('shuttles'); setActive(this)">
+          <span class="nav-icon">🚐</span> Shuttles
+        </div>
+
+        <div class="nav-section-label">Bookings &amp; Passengers</div>
+        <div class="nav-item" id="nav-bookings" onclick="showTab('bookings'); setActive(this)">
+          <span class="nav-icon">🎫</span> All Bookings
+        </div>
+
+        <div class="nav-section-label">System Administration</div>
+        <div class="nav-item" id="nav-users" onclick="showTab('users'); setActive(this)">
+          <span class="nav-icon">👥</span> Users
+        </div>
+
+        <div class="nav-section-label">Session</div>
+        <a class="nav-item" href="logout.php">
+          <span class="nav-icon">🚪</span> Logout
+        </a>
+      </nav>
+
+      <div class="sidebar-user">
+        <div class="user-avatar" id="admin-sidebar-avatar">AD</div>
+        <div class="user-info">
+          <strong id="admin-name-display">Admin User</strong>
+          <span>System Administrator</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ── Main Content ── -->
+    <main class="main-content">
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <h1 id="page-title">Route &amp; Service Management</h1>
+          <p id="page-subtitle">Manage routes, schedules, stops, shuttles, and user accounts</p>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-btn" title="Refresh" onclick="location.reload()">🔄</button>
+          <a href="logout.php" class="icon-btn" title="Logout" style="text-decoration:none;display:flex;align-items:center;justify-content:center">🚪</a>
+          <div class="user-avatar" id="admin-topbar-avatar" style="cursor:pointer" title="Admin User">AD</div>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <div class="page-content">
+        <!-- Stats -->
+        <div class="stats-grid" id="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon blue">🗺️</div>
+            <div>
+              <div class="stat-value" id="stat-routes">0</div>
+              <div class="stat-label">Active Routes</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon purple">🕐</div>
+            <div>
+              <div class="stat-value" id="stat-schedules">0</div>
+              <div class="stat-label">Schedules</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon green">📍</div>
+            <div>
+              <div class="stat-value" id="stat-stops">0</div>
+              <div class="stat-label">Bus Stops</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon amber">🚐</div>
+            <div>
+              <div class="stat-value" id="stat-shuttles">0</div>
+              <div class="stat-label">Shuttles</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon blue">🎫</div>
+            <div>
+              <div class="stat-value" id="stat-bookings">0</div>
+              <div class="stat-label">Total Bookings</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon purple">👥</div>
+            <div>
+              <div class="stat-value" id="stat-users">0</div>
+              <div class="stat-label">System Accounts</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Section Card with Tabs -->
+        <div class="section-card">
+          <!-- Tabs -->
+          <div class="tab-nav">
+            <button class="tab-btn active" id="tab-btn-routes" onclick="showTab('routes')">
+              🗺️ Routes <span class="tab-count" id="cnt-routes">0</span>
+            </button>
+            <button class="tab-btn" id="tab-btn-schedules" onclick="showTab('schedules')">
+              🕐 Schedules <span class="tab-count" id="cnt-schedules">0</span>
+            </button>
+            <button class="tab-btn" id="tab-btn-stops" onclick="showTab('stops')">
+              📍 Stops <span class="tab-count" id="cnt-stops">0</span>
+            </button>
+            <button class="tab-btn" id="tab-btn-shuttles" onclick="showTab('shuttles')">
+              🚐 Shuttles <span class="tab-count" id="cnt-shuttles">0</span>
+            </button>
+            <button class="tab-btn" id="tab-btn-bookings" onclick="showTab('bookings')">
+              🎫 Bookings <span class="tab-count" id="cnt-bookings">0</span>
+            </button>
+            <button class="tab-btn" id="tab-btn-users" onclick="showTab('users')">
+              👥 Users <span class="tab-count" id="cnt-users">0</span>
+            </button>
+          </div>
+
+          <!-- ── ROUTES TAB ── -->
+          <div class="tab-panel active" id="panel-routes">
+            <div class="filter-bar">
+              <div class="search-input-wrap">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" placeholder="Search routes…" oninput="filterTable('routes-tbody', this.value)" />
+              </div>
+              <select class="form-control" style="width:160px" onchange="filterByStatus('routes-tbody', this.value)">
+                <option value="">All Status</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+                <option value="Maintenance">Maintenance</option>
+              </select>
+              <button class="btn btn-primary" onclick="openModal('modal-route')">
+                ➕ Add Route
+              </button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Route ID</th>
+                    <th>Route Name</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Distance</th>
+                    <th>Stops</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="routes-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- ── SCHEDULES TAB ── -->
+          <div class="tab-panel" id="panel-schedules">
+            <div class="filter-bar">
+              <div class="search-input-wrap">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" placeholder="Search schedules…" oninput="filterTable('schedules-tbody', this.value)" />
+              </div>
+              <select class="form-control" style="width:160px" onchange="filterByStatus('schedules-tbody', this.value)">
+                <option value="">All Status</option>
+                <option value="Active">Active</option>
+                <option value="Suspended">Suspended</option>
+                <option value="Full">Full</option>
+              </select>
+              <button class="btn btn-primary" onclick="openModal('modal-schedule')">
+                ➕ Add Schedule
+              </button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Schedule ID</th>
+                    <th>Route</th>
+                    <th>Departure</th>
+                    <th>Arrival</th>
+                    <th>Operating Days</th>
+                    <th>Shuttle</th>
+                    <th>Seats</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="schedules-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- ── STOPS TAB ── -->
+          <div class="tab-panel" id="panel-stops">
+            <div class="filter-bar">
+              <div class="search-input-wrap">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" placeholder="Search stops…" oninput="filterTable('stops-tbody', this.value)" />
+              </div>
+              <button class="btn btn-primary" onclick="openModal('modal-stop')">
+                ➕ Add Stop
+              </button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Stop ID</th>
+                    <th>Stop Name</th>
+                    <th>Address / Location</th>
+                    <th>Assigned Routes</th>
+                    <th>Stop Order</th>
+                    <th>Landmark</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="stops-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- ── SHUTTLES TAB ── -->
+          <div class="tab-panel" id="panel-shuttles">
+            <div class="filter-bar">
+              <div class="search-input-wrap">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" placeholder="Search shuttles…" oninput="filterTable('shuttles-tbody', this.value)" />
+              </div>
+              <select class="form-control" style="width:160px" onchange="filterByStatus('shuttles-tbody', this.value)">
+                <option value="">All Status</option>
+                <option value="Active">Active</option>
+                <option value="Idle">Idle</option>
+                <option value="Maintenance">Maintenance</option>
+              </select>
+              <button class="btn btn-primary" onclick="openModal('modal-shuttle')">
+                ➕ Add Shuttle
+              </button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Shuttle ID</th>
+                    <th>Plate No.</th>
+                    <th>Model</th>
+                    <th>Capacity</th>
+                    <th>Assigned Route</th>
+                    <th>Assigned Driver</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="shuttles-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- ── BOOKINGS TAB ── -->
+          <div class="tab-panel" id="panel-bookings">
+            <div class="filter-bar">
+              <div class="search-input-wrap">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" placeholder="Search bookings…" oninput="filterTable('bookings-tbody', this.value)" />
+              </div>
+              <select class="form-control" style="width:160px" onchange="filterByStatus('bookings-tbody', this.value)">
+                <option value="">All Status</option>
+                <option value="Confirmed">Confirmed</option>
+                <option value="Pending">Pending</option>
+                <option value="Cancelled">Cancelled</option>
+                <option value="Completed">Completed</option>
+              </select>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Booking Code</th>
+                    <th>Passenger</th>
+                    <th>Route</th>
+                    <th>Travel Date</th>
+                    <th>Time</th>
+                    <th>Seat</th>
+                    <th>Fare</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="bookings-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- ── USERS TAB (Requirement 7) ── -->
+          <div class="tab-panel" id="panel-users">
+            <div class="filter-bar">
+              <div class="search-input-wrap">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" placeholder="Search users by name, username, email…" oninput="filterUsers(this.value)" />
+              </div>
+              <select class="form-control" style="width:160px" id="users-role-filter" onchange="filterUsersByRole(this.value)">
+                <option value="">All Roles</option>
+                <option value="admin">Administrators</option>
+                <option value="passenger">Passengers</option>
+                <option value="driver">Drivers</option>
+              </select>
+              <button class="btn btn-primary" onclick="openAddUserModal()">
+                ➕ Add User
+              </button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>User ID</th>
+                    <th>Full Name</th>
+                    <th>Username</th>
+                    <th>Email Address</th>
+                    <th>Role</th>
+                    <th>Created At</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="users-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+        </div><!-- /section-card -->
+      </div><!-- /page-content -->
+    </main>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       MODALS
+  ══════════════════════════════════════════════════════════ -->
+
+  <!-- Add / Edit Route Modal -->
+  <div class="modal-overlay" id="modal-route">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">🗺️ <span id="modal-route-title">Add New Route</span></div>
+        <button class="modal-close" onclick="closeModal('modal-route')">✕</button>
+      </div>
+      <form id="form-route" onsubmit="saveRoute(event)">
+        <input type="hidden" id="route-id-field" />
+        <div class="form-group">
+          <label class="form-label">Route Name *</label>
+          <input type="text" class="form-control" id="r-name" placeholder="e.g. Campus Express" required />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Origin *</label>
+            <input type="text" class="form-control" id="r-origin" placeholder="e.g. Main Campus" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Destination *</label>
+            <input type="text" class="form-control" id="r-destination" placeholder="e.g. City Terminal" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Distance (km)</label>
+            <input type="number" step="0.1" class="form-control" id="r-distance" placeholder="e.g. 12.5" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Duration (minutes)</label>
+            <input type="number" class="form-control" id="r-duration" placeholder="e.g. 45" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Fare (₱)</label>
+            <input type="number" step="0.5" class="form-control" id="r-fare" placeholder="e.g. 25.00" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <select class="form-control" id="r-status">
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+              <option value="Maintenance">Maintenance</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Notes</label>
+            <input type="text" class="form-control" id="r-notes" placeholder="Optional notes" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-route')">Cancel</button>
+          <button type="submit" class="btn btn-primary">💾 Save Route</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add / Edit Schedule Modal -->
+  <div class="modal-overlay" id="modal-schedule">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">🕐 <span id="modal-schedule-title">Add New Schedule</span></div>
+        <button class="modal-close" onclick="closeModal('modal-schedule')">✕</button>
+      </div>
+      <form id="form-schedule" onsubmit="saveSchedule(event)">
+        <input type="hidden" id="sched-id-field" />
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Route *</label>
+            <select class="form-control" id="s-route" required>
+              <option value="">— Select Route —</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Shuttle *</label>
+            <select class="form-control" id="s-shuttle" required>
+              <option value="">— Select Shuttle —</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Departure Time *</label>
+            <input type="time" class="form-control" id="s-dep" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Arrival Time *</label>
+            <input type="time" class="form-control" id="s-arr" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Operating Days *</label>
+          <div class="days-grid">
+            <label class="day-check"><input type="checkbox" value="Mon" /> Mon</label>
+            <label class="day-check"><input type="checkbox" value="Tue" /> Tue</label>
+            <label class="day-check"><input type="checkbox" value="Wed" /> Wed</label>
+            <label class="day-check"><input type="checkbox" value="Thu" /> Thu</label>
+            <label class="day-check"><input type="checkbox" value="Fri" /> Fri</label>
+            <label class="day-check"><input type="checkbox" value="Sat" /> Sat</label>
+            <label class="day-check"><input type="checkbox" value="Sun" /> Sun</label>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Available Seats</label>
+            <input type="number" class="form-control" id="s-seats" placeholder="e.g. 24" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <select class="form-control" id="s-status">
+              <option value="Active">Active</option>
+              <option value="Suspended">Suspended</option>
+              <option value="Full">Full</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-schedule')">Cancel</button>
+          <button type="submit" class="btn btn-primary">💾 Save Schedule</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add / Edit Stop Modal -->
+  <div class="modal-overlay" id="modal-stop">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">📍 <span id="modal-stop-title">Add New Stop</span></div>
+        <button class="modal-close" onclick="closeModal('modal-stop')">✕</button>
+      </div>
+      <form id="form-stop" onsubmit="saveStop(event)">
+        <input type="hidden" id="stop-id-field" />
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Stop Name *</label>
+            <input type="text" class="form-control" id="sp-name" placeholder="e.g. Main Gate" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Route *</label>
+            <select class="form-control" id="sp-route" required>
+              <option value="">— Select Route —</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Address / Location *</label>
+          <input type="text" class="form-control" id="sp-address" placeholder="Full address or location description" required />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Stop Order *</label>
+            <input type="number" class="form-control" id="sp-order" placeholder="e.g. 1" min="1" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Landmark</label>
+            <input type="text" class="form-control" id="sp-landmark" placeholder="Near landmark" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Latitude</label>
+            <input type="text" class="form-control" id="sp-lat" placeholder="e.g. 10.3157" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Longitude</label>
+            <input type="text" class="form-control" id="sp-lng" placeholder="e.g. 123.8854" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-stop')">Cancel</button>
+          <button type="submit" class="btn btn-primary">💾 Save Stop</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add / Edit Shuttle Modal -->
+  <div class="modal-overlay" id="modal-shuttle">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">🚐 <span id="modal-shuttle-title">Add New Shuttle</span></div>
+        <button class="modal-close" onclick="closeModal('modal-shuttle')">✕</button>
+      </div>
+      <form id="form-shuttle" onsubmit="saveShuttle(event)">
+        <input type="hidden" id="shuttle-id-field" />
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Plate Number *</label>
+            <input type="text" class="form-control" id="sh-plate" placeholder="e.g. ABC-1234" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Model / Type *</label>
+            <input type="text" class="form-control" id="sh-model" placeholder="e.g. Toyota Coaster" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Seat Capacity *</label>
+            <input type="number" class="form-control" id="sh-capacity" placeholder="e.g. 24" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Year</label>
+            <input type="number" class="form-control" id="sh-year" placeholder="e.g. 2022" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Assigned Route</label>
+            <select class="form-control" id="sh-route">
+              <option value="">— Unassigned —</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Assigned Driver</label>
+            <select class="form-control" id="sh-driver">
+              <option value="">— Unassigned —</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <select class="form-control" id="sh-status">
+              <option value="Active">Active</option>
+              <option value="Idle">Idle</option>
+              <option value="Maintenance">Maintenance</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Maintenance</label>
+            <input type="date" class="form-control" id="sh-lastmaint" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-shuttle')">Cancel</button>
+          <button type="submit" class="btn btn-primary">💾 Save Shuttle</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add User Modal (Requirement 7.B) -->
+  <div class="modal-overlay" id="modal-user">
+    <div class="modal" style="max-width:520px">
+      <div class="modal-header">
+        <div class="modal-title">👥 <span id="modal-user-title">Create New Account</span></div>
+        <button class="modal-close" onclick="closeModal('modal-user')">✕</button>
+      </div>
+      <form id="form-user" onsubmit="saveUser(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Username *</label>
+            <input type="text" class="form-control" id="usr-username" placeholder="e.g. jdoe" required autocomplete="off" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Full Name *</label>
+            <input type="text" class="form-control" id="usr-name" placeholder="e.g. John Doe" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Email Address *</label>
+            <input type="email" class="form-control" id="usr-email" placeholder="e.g. jdoe@example.com" required autocomplete="off" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Role *</label>
+            <select class="form-control" id="usr-role" required>
+              <option value="passenger">Passenger</option>
+              <option value="driver">Driver</option>
+              <option value="admin">Administrator</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password * (minimum 6 characters)</label>
+          <input type="password" class="form-control" id="usr-password" placeholder="Create secure password" minlength="6" required autocomplete="new-password" />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-user')">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="save-user-btn">💾 Create Account</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Confirm Delete Modal (Generic for Route/Schedule/Stop/Shuttle/User) -->
+  <div class="modal-overlay" id="modal-confirm">
+    <div class="modal confirm-modal">
+      <div class="confirm-icon">🗑️</div>
+      <div class="modal-header" style="justify-content:center;margin-bottom:8px">
+        <div class="modal-title">Confirm Deletion</div>
+      </div>
+      <p id="confirm-msg" style="text-align:center;color:var(--text-secondary);font-size:14px">
+        Are you sure you want to delete this record? This action cannot be undone.
+      </p>
+      <div class="modal-footer" style="justify-content:center;margin-top:20px">
+        <button class="btn btn-secondary" onclick="closeModal('modal-confirm')">Cancel</button>
+        <button class="btn btn-danger" id="confirm-delete-btn">🗑️ Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Booking Modal (admin read details) -->
+  <div class="modal-overlay" id="modal-booking-view">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">🎫 Booking Details</div>
+        <button class="modal-close" onclick="closeModal('modal-booking-view')">✕</button>
+      </div>
+      <div id="booking-detail-body"></div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-booking-view')">Close</button>
+        <button class="btn btn-danger" id="admin-cancel-booking-btn">Cancel Booking</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="admin-routes.js"></script>
+</body>
+</html>
